@@ -10,6 +10,7 @@ CSV_URL = 'data/synoniemen.csv'
 
 def _search_filters():
     if len(SOURCES) == 0:
+        return {}
 
     return {'source': SOURCES.split(',')}
 
