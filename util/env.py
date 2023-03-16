@@ -4,7 +4,7 @@ import dotenv
 dotenv.load_dotenv()
 
 ENGINE_NAME = os.environ['ENGINE_NAME']
-SUB_SOURCE_FILTER = os.environ["SUB_SOURCE_FILTER"]
+SOURCES = os.environ['SOURCES']
 
 MINIO_HOST = os.environ['MINIO_HOST']
 MINIO_ACCESS_KEY = os.environ['MINIO_ACCESS_KEY']

@@ -23,11 +23,11 @@ def store_output_in_s3(file_path):
 
 
 def _s3_file_name():
-    from .env import ENGINE_NAME, SUB_SOURCE_FILTER
+    from .env import ENGINE_NAME, SOURCES
 
     date_str = datetime.now().strftime('%Y%m%d')
     base_file_name = ENGINE_NAME
-    if type(SUB_SOURCE_FILTER) is str and len(SUB_SOURCE_FILTER) > 0:
-        base_file_name = f"{base_file_name}--{SUB_SOURCE_FILTER}"
 
+    if len(SOURCES) > 0:
+        base_file_name = f"{base_file_name}--{'_'.join(SOURCES.split(','))}"
     return f"/j-en-v-orgs/{base_file_name}--{date_str}.xlsx"

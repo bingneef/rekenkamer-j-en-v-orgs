@@ -3,16 +3,15 @@ import os
 import pandas as pd
 from util.app_engine import search_max_documents
 from util.s3 import store_output_in_s3
-from util.env import ENGINE_NAME, SUB_SOURCE_FILTER
+from util.env import ENGINE_NAME, SOURCES
 
 CSV_URL = 'data/synoniemen.csv'
 
 
 def _search_filters():
-    if SUB_SOURCE_FILTER is None or type(SUB_SOURCE_FILTER) is not str or len(SUB_SOURCE_FILTER) == 0:
-        return {}
+    if len(SOURCES) == 0:
 
-    return {'doc_sub_source': SUB_SOURCE_FILTER}
+    return {'source': SOURCES.split(',')}
 
 
 def _fetch_organisation_array_from_excel() -> list[str]:
@@ -64,7 +63,8 @@ def _search(search_terms: list[str]) -> list[dict]:
                 lambda result: {
                     'score': result['score'],
                     'uid': result['id'],
-                    'pdf_url': result['url'],
+                    'title': result['title'],
+                    'doc_url': result['url'],
                     'is_vo': False,
                     'ministries': [],
                     'publish_date': result['date'][0:10]
