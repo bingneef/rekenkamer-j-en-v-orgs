@@ -1,4 +1,5 @@
 .*env
+requirements.txt
 .idea
 .coverage
 .vscode

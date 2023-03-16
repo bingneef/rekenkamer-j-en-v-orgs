@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install poetry
-          poetry export --format requirements.txt > requirements.txt
+          poetry export --format requirements.txt --with dev > requirements.txt
           python -m pip install --upgrade pip
           pip install flake8 pytest
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
