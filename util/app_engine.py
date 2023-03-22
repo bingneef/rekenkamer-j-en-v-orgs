@@ -1,15 +1,12 @@
-import os
-
 from elastic_enterprise_search import AppSearch
 
-ENGINE_BASE_URL = os.environ['ENGINE_BASE_URL']
-ENGINE_AUTH = os.environ['ENGINE_AUTH']
+from util.env import ENGINE_BASE_URL, ELASTIC_APP_SEARCH_KEY
 
 
 def get_app_search():
     return AppSearch(
         ENGINE_BASE_URL,
-        http_auth=ENGINE_AUTH,
+        http_auth=ELASTIC_APP_SEARCH_KEY,
     )
 
 
