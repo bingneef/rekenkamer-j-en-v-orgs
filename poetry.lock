@@ -108,6 +108,21 @@ files = [
 toml = ["tomli"]
 
 [[package]]
+name = "ecs-logging"
+version = "2.0.0"
+description = "Logging formatters for ECS (Elastic Common Schema) in Python"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "ecs-logging-2.0.0.tar.gz", hash = "sha256:d4b791f044e8b96a4707edd4156a35fbe0e593c27ba5f05bae6b007cfab7622c"},
+    {file = "ecs_logging-2.0.0-py3-none-any.whl", hash = "sha256:8acbc164a7c14d96cb6b3b3e90e8b6972f93ddbd0215e71c6823856518f742ff"},
+]
+
+[package.extras]
+develop = ["elastic-apm", "mock", "pytest", "pytest-cov", "structlog"]
+
+[[package]]
 name = "elastic-enterprise-search"
 version = "8.4.0"
 description = "Official Python client for Elastic Enterprise Search, App Search, and Workplace Search"
@@ -585,4 +600,4 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "77e159db4e0cb3efe60b2f5552f403c924e078c787131a59c5f536f2ca6dc61b"
+content-hash = "53527221de0de509a4bc99e6c35ab5bc55dc6647274f998c7b6bf0dbf81fe653"

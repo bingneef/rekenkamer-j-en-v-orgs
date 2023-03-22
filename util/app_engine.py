@@ -1,6 +1,7 @@
 from elastic_enterprise_search import AppSearch
 
 from util.env import ENGINE_BASE_URL, ELASTIC_APP_SEARCH_KEY
+from util.logger import logger
 
 
 def get_app_search():
@@ -15,7 +16,7 @@ def search_max_documents(kwargs):
 
     current_page = 1
     while True:
-        print(f"Searching page {current_page}, currently at {(len(results['documents']))} documents")
+        logger.info(f"Searching page {current_page}, currently at {(len(results['documents']))} documents")
         search_args = {
             **kwargs,
             'limit': 1000,
@@ -94,7 +95,7 @@ def search(
 
         results.append(row)
 
-    print(f"Found {data['meta']['page']['total_results']} result(s) for {query}")
+    logger.info(f"Found {data['meta']['page']['total_results']} result(s) for {query}")
 
     return {
         'meta': {

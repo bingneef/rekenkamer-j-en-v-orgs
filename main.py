@@ -2,6 +2,7 @@ import os
 
 import pandas as pd
 from util.app_engine import search_max_documents
+from util.logger import logger
 from util.s3 import store_output_in_s3
 from util.env import ENGINE_NAME, SOURCES
 
@@ -80,7 +81,7 @@ def _search(search_terms: list[str]) -> list[dict]:
 
 def main() -> None:
     organisations = _fetch_organisation_array_from_excel()
-    print(f"Fetched {len(organisations)} organisations from Excel")
+    logger.info(f"Fetched {len(organisations)} organisations from Excel")
 
     results = []
     for i, organisation in enumerate(organisations):
@@ -88,7 +89,7 @@ def main() -> None:
         results.extend(new_results)
 
         if i % 10 == 0 and i > 0:
-            print(f"{i} organisations completed")
+            logger.info(f"{i} organisations completed")
 
     df = pd.DataFrame.from_dict(results)
     local_file_path = 'output/tmp.xlsx'
@@ -102,7 +103,7 @@ def main() -> None:
     # Remove tmp file
     os.remove(local_file_path)
 
-    print(f"Total {len(results)} hits found and stored in S3")
+    logger.info(f"Total {len(results)} hits found and stored in S3 at {local_file_path}")
 
 
 if __name__ == '__main__':
