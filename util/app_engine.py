@@ -1,12 +1,12 @@
 from elastic_enterprise_search import AppSearch
 
-from util.env import ENGINE_BASE_URL, ELASTIC_APP_SEARCH_KEY
+from util.env import ELASTIC_ENTERPRISE_URL, ELASTIC_APP_SEARCH_KEY
 from util.logger import logger
 
 
 def get_app_search():
     return AppSearch(
-        ENGINE_BASE_URL,
+        ELASTIC_ENTERPRISE_URL,
         http_auth=ELASTIC_APP_SEARCH_KEY,
     )
 
