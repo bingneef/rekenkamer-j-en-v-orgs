@@ -12,6 +12,6 @@ logger.addHandler(handler)
 # Add an ECS formatter to the Handler
 fileHandler = logging.FileHandler('logs/j-en-v-orgs.json')
 fileHandler.setFormatter(
-    ecs_logging.StdlibFormatter(extra={'event.dataset': 'JenVOrgs'})
+        ecs_logging.StdlibFormatter(extra={'event.dataset': 'JenVOrgs'})
 )
 logger.addHandler(fileHandler)
