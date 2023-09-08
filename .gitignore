@@ -5,9 +5,8 @@ requirements.txt
 .vscode
 __pycache__
 /docker
-/data
 /tmp
-/log
+/logs
 /output
 
 /venv/

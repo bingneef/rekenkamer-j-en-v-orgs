@@ -10,28 +10,21 @@ def get_client():
         MINIO_HOST,
         access_key=MINIO_ACCESS_KEY,
         secret_key=MINIO_SECRET_KEY,
-        secure=MINIO_SECURE
+        secure=MINIO_SECURE,
     )
 
 
-def store_output_in_s3(file_path):
-    target_file_path = _s3_file_name()
+def store_output_in_s3(file_path, kind):
+    target_file_path = _s3_file_name(kind=kind)
     get_client().fput_object(
-        bucket_name='artifacts',
-        object_name=target_file_path,
-        file_path=file_path
+        bucket_name="artifacts", object_name=target_file_path, file_path=file_path
     )
 
     return target_file_path
 
 
-def _s3_file_name():
-    from .env import ENGINE_NAME, SOURCES
+def _s3_file_name(kind):
+    date_str = datetime.now().strftime("%Y%m%d")
+    base_file_name = "source-main"
 
-    date_str = datetime.now().strftime('%Y%m%d')
-    base_file_name = ENGINE_NAME
-
-    if len(SOURCES) > 0:
-        base_file_name = f"{base_file_name}--{'_'.join(SOURCES.split(','))}"
-
-    return f"/j-en-v-orgs/{base_file_name}--{date_str}.xlsx"
+    return f"/j-en-v/{kind}/{base_file_name}--{date_str}.xlsx"
