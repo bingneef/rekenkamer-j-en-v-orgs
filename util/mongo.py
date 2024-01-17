@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 
 import pymongo
 from util.logger import logger
@@ -8,7 +9,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def run_query(query: dict, projection: dict) -> list[dict]:
+def run_cursor_query(
+    query: str, projection: Optional[dict] = None
+) -> pymongo.cursor.Cursor:
     client = pymongo.MongoClient(os.environ["MONGO_CONNECTION_STRING"])  # type: ignore
 
     db_name = os.environ.get("MONGO_DB", "sources")
@@ -21,22 +24,10 @@ def run_query(query: dict, projection: dict) -> list[dict]:
     logger.info(f"--- Sending query {query} to MongoDB ---")
     results = db_conn["source_documents"].find(query, projection)
 
-    # Convert documents to list
-    start_time = time.time()
-    documents = list(results)
-    logger.info(
-        "--- Converted {} document(s) in {:.2f} seconds ---".format(
-            len(documents), time.time() - start_time
-        )
-    )
-
-    # Close connection with MongoDB
-    client.close()
-
-    return documents
+    return results
 
 
-def search_max_documents(search_terms: list[str], operator: str) -> list[dict]:
+def search_all_documents(search_terms: list[str], operator: str) -> list[dict]:
     read_chars = "[ \\n.,;]"
 
     if operator == "AND":
@@ -52,6 +43,33 @@ def search_max_documents(search_terms: list[str], operator: str) -> list[dict]:
     # Ensure source custom is not included!
     query["source"] = {"$not": {"$eq": "custom"}}
 
-    documents = run_query(query, {"doc_content": 0})
+    documents_cursor = run_cursor_query(query, {"doc_content": 0})
 
-    return documents
+    return list(documents_cursor)
+
+
+def source_cursor(source: str) -> list[dict]:
+    if source != "":
+        if "custom" in source:
+            raise ValueError("Cannot search for custom sources!")
+
+        query = {"source": {"$regex": source}}
+
+    else:
+        query = {"source": {"$not": {"$eq": "custom"}}}
+
+    return run_cursor_query(
+        query,
+        {
+            "downloaded": 0,
+            "enriched": 0,
+            "local_doc_url": 0,
+            "read": 0,
+            "stored": 0,
+            "version_download": 0,
+            "version_enrich": 0,
+            "version_read": 0,
+            "version_scrape": 0,
+            "version_store": 0,
+        },
+    )

@@ -14,17 +14,16 @@ def get_client():
     )
 
 
-def store_output_in_s3(file_path, kind):
-    target_file_path = _s3_file_name(kind=kind)
+def store_output_in_s3(file_path, kind, base_file_name):
+    target_file_path = _s3_file_name(kind=kind, base_file_name=base_file_name)
     get_client().fput_object(
-        bucket_name="artifacts", object_name=target_file_path, file_path=file_path
+        bucket_name="exports", object_name=target_file_path, file_path=file_path
     )
 
     return target_file_path
 
 
-def _s3_file_name(kind):
+def _s3_file_name(kind, base_file_name="source-main"):
     date_str = datetime.now().strftime("%Y%m%d")
-    base_file_name = "source-main"
 
-    return f"/j-en-v/{kind}/{base_file_name}--{date_str}.xlsx"
+    return f"/raw-export/{kind}/{base_file_name}--{date_str}.xlsx"

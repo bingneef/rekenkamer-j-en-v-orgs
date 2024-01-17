@@ -1,7 +1,7 @@
 import os
 
 import pandas as pd
-from util.mongo import search_max_documents
+from util.mongo import search_all_documents
 from util.logger import logger
 from util.s3 import store_output_in_s3
 
@@ -128,7 +128,7 @@ def _search(search_terms: str | list[str], operator: str) -> list[dict]:
     if type(search_terms) == str:
         search_terms = [search_terms]
 
-    raw_documents = search_max_documents(search_terms, operator)
+    raw_documents = search_all_documents(search_terms, operator)
     return [fmt_raw_document(document) for document in raw_documents]
 
 

@@ -4,13 +4,13 @@ version = "0.1.0"
 description = ""
 authors = ["Bing Steup <bingsteup@gmail.com>"]
 readme = "README.md"
-packages = [{include = "rekenkamer_j_en_v_orgs"}]
+packages = [{ include = "rekenkamer_j_en_v_orgs" }]
 
 [tool.poetry.dependencies]
 python = "^3.11"
 elastic-enterprise-search = "^8.4.0"
 openpyxl = "^3.1.2"
-pandas = "^1.5.3"
+pandas = "^2.1.4"
 minio = "^7.1.13"
 python-dotenv = "^1.0.0"
 ecs-logging = "^2.0.0"
@@ -28,4 +28,3 @@ pytest-cov = "^4.0.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-

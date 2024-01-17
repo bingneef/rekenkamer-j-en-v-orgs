@@ -4,6 +4,8 @@ import dotenv
 
 dotenv.load_dotenv()
 
+SOURCE = os.environ["SOURCE"]
+
 MINIO_HOST = os.environ["MINIO_HOST"]
 MINIO_ACCESS_KEY = os.environ["MINIO_ACCESS_KEY"]
 MINIO_SECRET_KEY = os.environ["MINIO_SECRET_KEY"]
