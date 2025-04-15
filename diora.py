@@ -3,7 +3,7 @@ import os
 import pandas as pd
 from util.mongo import search_all_documents
 from util.logger import logger
-from util.s3 import store_output_in_s3
+from util.s3 import store_output_in_s3_versioned
 
 
 CSV_ORGS_URL = "data/organisations.csv"
@@ -107,14 +107,17 @@ def _dossier_element_from_meta(meta: dict, element: str) -> str:
 
 
 def fmt_raw_document(document: dict) -> dict:
+    root_source = document["source"].split("__")[0]
+    kind = document["source"].split("__")[1]
+
     return {
         "uid": document["remote_uid"],
         "title": document["title"],
-        "source": document["source"],
+        "source": root_source,
         "doc_url": document["doc_url"],
-        "is_vo": is_vo(document["remote_uid"], document["source"]),
-        "kind": safe_key_or_none("bulk_key", document["meta"]),
-        "publish_date": document["date"][0:10],
+        "is_vo": is_vo(document["remote_uid"], root_source),
+        "kind": kind,
+        "publish_date": document["published_at"].strftime("%Y-%m-%d"),
         "meta.file_dossier_numbers": _dossier_element_from_meta(
             document["meta"], "nummer"
         ),
@@ -155,10 +158,13 @@ def main(kind: str = "orgs") -> None:
 
     df = pd.DataFrame.from_dict(results)
 
-    local_file_path = "output/tmp.xlsx"
-    df.to_excel(local_file_path, index=False)
+    local_file_path = f"output/tmp.csv"
+    df.to_csv(local_file_path, index=False)
 
-    target_file_path = store_output_in_s3(file_path=local_file_path, kind=kind)
+    # Store in S3 (latest and versioned)
+    target_file_path = store_output_in_s3_versioned(
+        file_path=local_file_path, kind=kind, extension='csv'
+    )
 
     # Remove tmp file
     os.remove(local_file_path)
@@ -169,5 +175,5 @@ def main(kind: str = "orgs") -> None:
 
 
 if __name__ == "__main__":
-    kind = os.environ.get("KIND", "orgs")
+    kind = os.environ.get("KIND", "themes")
     main(kind=kind)

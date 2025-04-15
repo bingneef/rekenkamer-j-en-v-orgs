@@ -14,8 +14,25 @@ def get_client():
     )
 
 
-def store_output_in_s3(file_path, kind, base_file_name):
-    target_file_path = _s3_file_name(kind=kind, base_file_name=base_file_name)
+def store_output_in_s3_versioned(file_path, kind, base_file_name="data", extension='xlsx'):
+    # Store latest
+    _store_output_in_s3(
+        file_path=file_path,
+        kind=kind,
+        base_file_name=base_file_name,
+        extension=extension,
+    )
+
+    # Store versioned
+    _store_output_in_s3(
+        file_path=file_path,
+        kind=kind,
+        base_file_name=f"{base_file_name}--{datetime.now().strftime('%Y%m%dT%H%M%S')}",
+        extension=extension,
+    )
+
+def _store_output_in_s3(file_path, kind, base_file_name, extension):
+    target_file_path = _s3_file_name(kind, base_file_name, extension)
     get_client().fput_object(
         bucket_name="exports", object_name=target_file_path, file_path=file_path
     )
@@ -23,7 +40,5 @@ def store_output_in_s3(file_path, kind, base_file_name):
     return target_file_path
 
 
-def _s3_file_name(kind, base_file_name="source-main"):
-    date_str = datetime.now().strftime("%Y%m%d")
-
-    return f"/raw-export/{kind}/{base_file_name}--{date_str}.xlsx"
+def _s3_file_name(kind, base_file_name, extension):
+    return f"/raw-export/{kind}/{base_file_name}.{extension}"
